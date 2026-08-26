@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#241F2E">
+<title>Copy Drawer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEqUlEQVR4nO3cPXLbZhSGUUiTMnVaN641btOnygq8xKzAVfq0GdVq1LpO7xQaemiapPDzAfcD3nMWIIHUfXBBgYOHoTMfPzx9qz4G1vPy+vxQfQznSg/GsDMMtVFs/osNPfdsHcNmv8zgM8VWIaz+Sww+S6wdwmo/3ODT0lohNP+hBp81tQ7hseUPM/ysrfWMNanJ4FOhxTZYvAEMP1VazN6iAAw/1ZbO4OwADD+9WDKLswIw/PRm7kxODsDw06s5szkpAMNP76bO6OgADD97MWVWRwVg+NmbsTP7bgCGn70aM7tNvwoBe3P3VrKzP7f8+9dv1Ycwya+//3111m8GYPi5Zm+Df+kyBJdAjLb34R+GYfjvnz9+OLFfDcDZn0tHGP6T8whsAN51pOE/OUXw02cAZ3/OHXH4z9kARPshAGd/zh397D8MNgDhvgfg7E8iG4BoAiDa4zC4/CGXDUA0ARBNAEQTANEefQAmmQ1ANAEQTQBEEwDRBEA0ARBNANz06fPX6kNYnQCIJgDuOvIW+PT5qwB43xEjOL0mATDKkSI4fy0CYLQjRHD5Gh58GY459vbIlFvxCoBoLoGIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIj2S/UBnHt+/lJ9CLv19PRn9SHsUhePRzf47QhhmvJLIMPflvdzmtIA/LHW4X0dr3wDQKWyAJyl1uX9HccGIJoAiCYAogmAaGUBuGGzLu/vODYA0UoDcJZah/d1vPIN4I/Vlvdzmi6+DHfi5s18Bn+ergKArZVfAkElARBNAEQTANEEQDQBEE0ARPNYlCJuXPWhixthSYN/SQi1yi+Bkod/GLz+ah6L0gHvQ53yDQCVPBalE96PGjYA0QRANAEQTQBE81iUTng/atgARPNYlA54H+qUb4D0P37666/WxZfhTpJuBhn8PnQVAGyt/BIIKgmAaAIgmgCIJgCiCYBoAiCax6LM4CbWcXRxI2wvg39JCPtXfgm01+Efhn0fO288FmWhI7yGZOUbACp5LEoDR3otaWwAogmAaAIgmgCI5rEoDRzptaSxAYjmsSgLHeE1JCvfAHseoD0fO2+6+DLcyV5uKBn84+gqANha+SUQVBIA0QRANAEQTQBEEwDRBEA0ARBNAEQTANEEQDQBEE0ARBMA0R5fXp8fqg8CKry8Pj/YAEQTANEEQDQBEO1xGN4+DFQfCGzpNPM2ANEEQLTvAbgMIsX5rNsARPshAFuAo7uccRuAaD8FYAtwVNdm2wYg2tUAbAGO5tZM2wBEuxmALcBR3JvluxtABOzdezPsEoho7wZgC7BXY2Z31AYQAXszdmZHXwKJgL2YMquTPgOIgN5NndHJH4JFQK/mzOas/wKJgN7MncnZ/wYVAb1YMouL7gOIgGpLZ3DxjTARUKXF7DUd3o8fnr61/HlwTcuTbtOvQtgGrK31jK02sLYBLa11cl39jC0Ellj7qmKzSxYhMMVWl9ObX7MLgXu2/hxZ+qFVDAxD7T9PuvuvjSiOrbf/FP4PhstIq7WJOjUAAAAASUVORK5CYII=">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEqUlEQVR4nO3cPXLbZhSGUUiTMnVaN641btOnygq8xKzAVfq0GdVq1LpO7xQaemiapPDzAfcD3nMWIIHUfXBBgYOHoTMfPzx9qz4G1vPy+vxQfQznSg/GsDMMtVFs/osNPfdsHcNmv8zgM8VWIaz+Sww+S6wdwmo/3ODT0lohNP+hBp81tQ7hseUPM/ysrfWMNanJ4FOhxTZYvAEMP1VazN6iAAw/1ZbO4OwADD+9WDKLswIw/PRm7kxODsDw06s5szkpAMNP76bO6OgADD97MWVWRwVg+NmbsTP7bgCGn70aM7tNvwoBe3P3VrKzP7f8+9dv1Ycwya+//3111m8GYPi5Zm+Df+kyBJdAjLb34R+GYfjvnz9+OLFfDcDZn0tHGP6T8whsAN51pOE/OUXw02cAZ3/OHXH4z9kARPshAGd/zh397D8MNgDhvgfg7E8iG4BoAiDa4zC4/CGXDUA0ARBNAEQTANEefQAmmQ1ANAEQTQBEEwDRBEA0ARBNANz06fPX6kNYnQCIJgDuOvIW+PT5qwB43xEjOL0mATDKkSI4fy0CYLQjRHD5Gh58GY459vbIlFvxCoBoLoGIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIj2S/UBnHt+/lJ9CLv19PRn9SHsUhePRzf47QhhmvJLIMPflvdzmtIA/LHW4X0dr3wDQKWyAJyl1uX9HccGIJoAiCYAogmAaGUBuGGzLu/vODYA0UoDcJZah/d1vPIN4I/Vlvdzmi6+DHfi5s18Bn+ergKArZVfAkElARBNAEQTANEEQDQBEE0ARPNYlCJuXPWhixthSYN/SQi1yi+Bkod/GLz+ah6L0gHvQ53yDQCVPBalE96PGjYA0QRANAEQTQBE81iUTng/atgARPNYlA54H+qUb4D0P37666/WxZfhTpJuBhn8PnQVAGyt/BIIKgmAaAIgmgCIJgCiCYBoAiCax6LM4CbWcXRxI2wvg39JCPtXfgm01+Efhn0fO288FmWhI7yGZOUbACp5LEoDR3otaWwAogmAaAIgmgCI5rEoDRzptaSxAYjmsSgLHeE1JCvfAHseoD0fO2+6+DLcyV5uKBn84+gqANha+SUQVBIA0QRANAEQTQBEEwDRBEA0ARBNAEQTANEEQDQBEE0ARBMA0R5fXp8fqg8CKry8Pj/YAEQTANEEQDQBEO1xGN4+DFQfCGzpNPM2ANEEQLTvAbgMIsX5rNsARPshAFuAo7uccRuAaD8FYAtwVNdm2wYg2tUAbAGO5tZM2wBEuxmALcBR3JvluxtABOzdezPsEoho7wZgC7BXY2Z31AYQAXszdmZHXwKJgL2YMquTPgOIgN5NndHJH4JFQK/mzOas/wKJgN7MncnZ/wYVAb1YMouL7gOIgGpLZ3DxjTARUKXF7DUd3o8fnr61/HlwTcuTbtOvQtgGrK31jK02sLYBLa11cl39jC0Ellj7qmKzSxYhMMVWl9ObX7MLgXu2/hxZ+qFVDAxD7T9PuvuvjSiOrbf/FP4PhstIq7WJOjUAAAAASUVORK5CYII=">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Copy Drawer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F1E4;
+  --paper-2:#EDE4D0;
+  --card:#FFFDF7;
+  --ink:#241F2E;
+  --ink-soft:#6B6478;
+  --ink-faint:#A79FAE;
+  --line:#DCD0B8;
+
+  --hook:#B4740E;
+  --hook-strong:#D98E2B;
+  --hook-wash:#F6E7CE;
+
+  --cta:#A23F26;
+  --cta-strong:#B54A32;
+  --cta-wash:#F3DED4;
+
+  --topic:#264C50;
+  --topic-strong:#2F5D62;
+  --topic-wash:#DCE7E6;
+
+  --highlighter:#F4C744;
+  --highlighter-ink:#3A2E06;
+
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --shadow-card:0 1px 2px rgba(36,31,46,.06), 0 6px 16px rgba(36,31,46,.06);
+  --shadow-pop:0 10px 30px rgba(36,31,46,.18);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0; height:100%;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Source Serif 4', Georgia, serif;
+  font-size:15px;
+  line-height:1.5;
+  overscroll-behavior-y:none;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+h1,h2,h3,.ui,.tab-label,.field-label,.btn,button,input,select,.pill,.eyebrow{
+  font-family:'Space Grotesk', system-ui, sans-serif;
+}
+button{font:inherit; cursor:pointer;}
+.app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;}
+
+/* ---------- Icons ---------- */
+.icon-svg{display:inline-block; vertical-align:middle; flex-shrink:0;}
+
+/* ---------- Label plate (wordmark, picker screen only) ---------- */
+.label-plate{display:flex; justify-content:center; padding:30px 18px 4px;}
+.plate-text{
+  position:relative; background:var(--ink); color:var(--paper);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px;
+  letter-spacing:.16em; text-transform:uppercase; padding:10px 30px; border-radius:8px;
+}
+.plate-text::before, .plate-text::after{
+  content:''; position:absolute; top:50%; width:5px; height:5px; border-radius:50%;
+  background:var(--paper); opacity:.5; transform:translateY(-50%);
+}
+.plate-text::before{left:9px;}
+.plate-text::after{right:9px;}
+
+/* ---------- Picker screen ---------- */
+.picker-wrap{flex:1; display:flex; flex-direction:column; justify-content:center; padding:14px 20px 40px;}
+.picker-prompt{
+  text-align:center; font-family:'Source Serif 4',serif; font-style:italic; font-size:17px;
+  color:var(--ink-soft); margin:6px 0 26px;
+}
+.cabinet{display:flex; flex-direction:column; gap:14px;}
+.drawer-front{
+  position:relative; overflow:hidden; display:flex; align-items:center; gap:14px; width:100%;
+  text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:16px;
+  padding:18px 16px 18px 20px; box-shadow:var(--shadow-card); transition:transform .1s ease;
+}
+.drawer-front::before{content:''; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--accent);}
+.drawer-front[data-color="hook"]{--accent:var(--hook-strong); --wash:var(--hook-wash);}
+.drawer-front[data-color="cta"]{--accent:var(--cta-strong); --wash:var(--cta-wash);}
+.drawer-front[data-color="topic"]{--accent:var(--topic-strong); --wash:var(--topic-wash);}
+.drawer-front:active{transform:scale(.985);}
+.df-handle{flex-shrink:0; color:var(--accent); opacity:.5;}
+.df-main{flex:1; display:flex; flex-direction:column; gap:4px; min-width:0;}
+.df-label{
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; color:var(--ink);
+  display:flex; align-items:center; gap:8px;
+}
+.df-badge{
+  font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--accent); background:var(--wash); padding:2px 8px; border-radius:10px;
+}
+.df-sub{font-size:12.5px; color:var(--ink-soft); font-family:'Space Grotesk',sans-serif;}
+.df-chev{flex-shrink:0; color:var(--ink-faint);}
+
+/* ---------- Header (drawer view) ---------- */
+.hdr{
+  padding:18px 18px 2px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.back-btn{
+  display:flex; align-items:center; gap:6px; border:none; background:none;
+  color:var(--ink-soft); font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px; padding:4px 2px;
+}
+.hdr .count-tag{font-size:11.5px; color:var(--ink-soft); font-weight:600;}
+.drawer-title{
+  padding:2px 18px 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:23px; color:var(--accent);
+}
+.drawer-title[data-color="hook"]{--accent:var(--hook-strong); color:var(--hook-strong);}
+.drawer-title[data-color="cta"]{--accent:var(--cta-strong); color:var(--cta-strong);}
+.drawer-title[data-color="topic"]{--accent:var(--topic-strong); color:var(--topic-strong);}
+
+/* ---------- Search + filters ---------- */
+.search-wrap{
+  background:var(--card); padding:12px 14px 10px; position:sticky; top:0; z-index:4;
+  border-bottom:1px solid var(--line);
+}
+
+.search-input{
+  width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--line);
+  background:var(--paper); font-family:'Source Serif 4',serif; font-size:14.5px; color:var(--ink);
+}
+.search-input:focus{outline:none; border-color:var(--ink-soft);}
+.filter-row{display:flex; gap:7px; overflow-x:auto; padding-top:10px; scrollbar-width:none;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-chip{
+  flex-shrink:0; padding:6px 13px; border-radius:20px; border:1.5px solid var(--line);
+  background:var(--paper); color:var(--ink-soft); font-size:12.5px; font-weight:600; white-space:nowrap;
+}
+.filter-chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+/* ---------- List ---------- */
+.list{padding:14px 14px 100px; display:flex; flex-direction:column; gap:10px; flex:1;}
+.empty-state{
+  margin-top:30px; text-align:center; padding:30px 20px; color:var(--ink-soft);
+}
+.empty-state .ico{display:flex; justify-content:center; margin-bottom:10px; color:var(--ink-faint);}
+.empty-state b{color:var(--ink); display:block; font-family:'Space Grotesk',sans-serif; margin-bottom:4px;}
+
+/* ---------- Card ---------- */
+.item-card{
+  background:var(--card); border-radius:var(--radius-md); box-shadow:var(--shadow-card);
+  border-left:4px solid var(--accent); overflow:hidden;
+}
+.item-card[data-color="hook"]{--accent:var(--hook-strong);}
+.item-card[data-color="cta"]{--accent:var(--cta-strong);}
+.item-card[data-color="topic"]{--accent:var(--topic-strong);}
+.item-head{
+  display:flex; align-items:flex-start; gap:10px; padding:13px 14px; text-align:left; width:100%; background:none; border:none;
+}
+.item-head .pin-ico{flex-shrink:0; font-size:13px; margin-top:2px; color:var(--ink-faint);}
+.item-head.pinned .pin-ico{color:var(--accent);}
+.item-head .preview{flex:1; font-size:14.5px; color:var(--ink); line-height:1.45;}
+.item-head .preview b{display:block; font-family:'Space Grotesk',sans-serif; font-size:14px; margin-bottom:2px; font-weight:600;}
+.item-head .chev{flex-shrink:0; font-size:12px; color:var(--ink-faint); margin-top:3px; transition:transform .15s ease;}
+.item-head.open .chev{transform:rotate(90deg);}
+.item-tags-row{display:flex; gap:5px; flex-wrap:wrap; padding:0 14px 10px 37px; margin-top:-6px;}
+.item-tags-row .tag{font-size:10.5px; font-weight:600; color:var(--accent); background:var(--wash); padding:2px 8px; border-radius:10px;}
+.item-card[data-color="hook"] .tag{background:var(--hook-wash);}
+.item-card[data-color="cta"] .tag{background:var(--cta-wash);}
+.item-card[data-color="topic"] .tag{background:var(--topic-wash);}
+
+.item-body{padding:0 14px 14px 14px; border-top:1px dashed var(--line);}
+.item-full-text{
+  margin:12px 0; font-size:15px; line-height:1.6; color:var(--ink); white-space:pre-wrap;
+}
+.point{margin:12px 0;}
+.point-label{
+  font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--accent); display:block; margin-bottom:3px;
+}
+.point-row{display:flex; align-items:flex-start; gap:8px;}
+.point-text{flex:1; font-size:14.5px; line-height:1.55; color:var(--ink); white-space:pre-wrap;}
+.point-copy{
+  flex-shrink:0; border:none; background:var(--paper-2); color:var(--ink-soft); width:28px; height:28px;
+  border-radius:8px; font-size:13px; display:flex; align-items:center; justify-content:center;
+}
+
+.copy-btn{
+  position:relative; overflow:hidden; display:block; width:100%; text-align:center; border:none;
+  background:var(--highlighter); color:var(--highlighter-ink); font-weight:700; font-size:13.5px;
+  padding:11px; border-radius:11px; margin-top:6px;
+}
+.copy-btn.ghost{background:transparent; border:1.5px solid var(--line); color:var(--ink-soft); font-weight:600;}
+.action-row{display:flex; gap:8px; margin-top:10px;}
+.action-row .copy-btn{margin-top:0;}
+.icon-btn{
+  flex-shrink:0; border:1.5px solid var(--line); background:var(--card); color:var(--ink-soft);
+  width:40px; border-radius:11px; font-size:15px;
+}
+.sweep::before{
+  content:''; position:absolute; inset:0; background:rgba(255,255,255,.55); transform:translateX(-105%);
+}
+.sweep.go::before{transform:translateX(105%); transition:transform .45s ease;}
+
+/* ---------- FAB ---------- */
+.fab{
+  position:fixed; right:20px; bottom:24px; width:56px; height:56px; border-radius:16px;
+  background:var(--ink); color:var(--paper); border:none; font-size:26px; font-weight:600;
+  box-shadow:var(--shadow-pop); z-index:20; max-width:480px;
+}
+.fab[data-color="hook"]{background:var(--hook);}
+.fab[data-color="cta"]{background:var(--cta);}
+.fab[data-color="topic"]{background:var(--topic);}
+
+/* ---------- Sheet (add/edit modal) ---------- */
+.sheet-backdrop{
+  position:fixed; inset:0; background:rgba(36,31,46,.45); z-index:30;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.sheet{
+  width:100%; max-width:480px; background:var(--paper); border-radius:22px 22px 0 0;
+  max-height:88vh; overflow-y:auto; padding:8px 18px 22px;
+  box-shadow:var(--shadow-pop);
+}
+.sheet-handle{width:38px; height:4px; background:var(--line); border-radius:3px; margin:8px auto 14px;}
+.sheet h2{font-size:18px; margin:0 0 14px; font-weight:700;}
+.field-label{display:block; font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); margin:14px 0 6px;}
+.field-label:first-of-type{margin-top:0;}
+.text-input, .text-area{
+  width:100%; border:1.5px solid var(--line); background:var(--card); border-radius:12px;
+  padding:11px 13px; font-family:'Source Serif 4',serif; font-size:14.5px; color:var(--ink);
+}
+.text-area{min-height:90px; resize:vertical; line-height:1.5;}
+.point-edit-row{
+  background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:10px;
+}
+.point-edit-row .row-top{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
+.point-edit-row .label-input{flex:1; font-weight:600; font-size:13px; border:none; background:none; padding:2px 0; font-family:'Space Grotesk',sans-serif;}
+.point-edit-row .label-input:focus{outline:none;}
+.point-edit-row .remove-point{flex-shrink:0; border:none; background:none; color:var(--ink-faint); font-size:16px;}
+.add-point-btn{
+  width:100%; border:1.5px dashed var(--line); background:none; color:var(--ink-soft); font-weight:600;
+  font-size:13px; padding:10px; border-radius:12px; margin-bottom:6px;
+}
+.tag-chip-row{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.tag-chip{
+  display:flex; align-items:center; gap:5px; background:var(--paper-2); color:var(--ink); font-size:12px;
+  font-weight:600; padding:5px 6px 5px 11px; border-radius:16px;
+}
+.tag-chip button{background:none; border:none; color:var(--ink-faint); font-size:13px; padding:0 4px;}
+.tag-suggest-row{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.tag-suggest{
+  background:none; border:1.5px dashed var(--line); color:var(--ink-soft); font-size:11.5px; font-weight:600;
+  padding:4px 10px; border-radius:14px;
+}
+.sheet-actions{display:flex; gap:10px; margin-top:20px;}
+.btn-primary{
+  flex:1; background:var(--ink); color:var(--paper); border:none; padding:13px; border-radius:13px; font-weight:700; font-size:14.5px;
+}
+.btn-secondary{
+  border:1.5px solid var(--line); background:none; color:var(--ink-soft); padding:13px 18px; border-radius:13px; font-weight:600; font-size:14.5px;
+}
+.danger-link{
+  display:block; text-align:center; margin-top:16px; color:var(--cta); font-size:13px; font-weight:600;
+  background:none; border:none;
+}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(20px); opacity:0;
+  background:var(--ink); color:var(--paper); padding:11px 20px; border-radius:12px; font-size:13.5px;
+  font-family:'Space Grotesk',sans-serif; font-weight:600; z-index:50; pointer-events:none; transition:all .25s ease;
+  box-shadow:var(--shadow-pop); max-width:88%; text-align:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+@media (min-width:481px){
+  .fab{right:calc(50% - 240px + 20px);}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* =========================================================
+   COPY DRAWER — hooks, CTAs, and topic talking-points,
+   organized into drawers you tap open and copy from.
+========================================================= */
+const STORE_KEY = 'copyDrawerState_v1';
+const DRAWERS = [
+  {id:'hooks',  label:'Hooks',  color:'hook',  noun:'hook'},
+  {id:'ctas',   label:'CTAs',   color:'cta',   noun:'CTA'},
+  {id:'topics', label:'Topics', color:'topic', noun:'topic'},
+];
+const DEFAULT_POINT_LABELS = ['Why it matters','Who needs it','How it helps','Common mistake','Quick fix','Example'];
+const SUGGESTED_TAGS = {
+  hooks:  ['curiosity','bold claim','question','story','stat','relatable','controversial'],
+  ctas:   ['soft ask','hard sell','urgent','free offer','comment below','dm me','link in bio'],
+  topics: ['teach','promote','trust','tips','faq','how-to','mistake fix'],
+};
+function freshUsage(){ return {hooks:{count:0,last:0}, ctas:{count:0,last:0}, topics:{count:0,last:0}}; }
+
+let state = loadState();
+let ui = {
+  view: 'picker',       // 'picker' (the "what are we looking for" screen) | 'drawer'
+  activeDrawer: 'hooks',
+  filter: 'all',       // 'all' | 'pinned' | 'archived' | tag string
+  search: '',
+  expandedId: null,
+  sheet: null,          // draft object while add/edit sheet is open, else null
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      return Object.assign({hooks:[],ctas:[],topics:[],usage:freshUsage()}, parsed);
+    }
+  }catch(e){}
+  return {hooks:[],ctas:[],topics:[],usage:freshUsage()};
+}
+function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function uid(p){ return p+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8); }
+function escapeHTML(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function jsq(s){ return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); } // safe for embedding inside a single-quoted JS string in an onclick="" attribute
+function drawerMeta(id){ return DRAWERS.find(d=>d.id===id); }
+
+/* ---------- Icons (plain stroke SVGs — no emoji, inherits button color) ---------- */
+function svgIcon(inner, size, extraClass){
+  size = size || 18;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg ${extraClass||''}">${inner}</svg>`;
+}
+const ICONS = {
+  pinOutline: (s)=>svgIcon('<path d="M12 3.4l2.1 4.6 5 .6-3.7 3.5 1 5-4.4-2.4-4.4 2.4 1-5-3.7-3.5 5-.6L12 3.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>', s),
+  pinFilled:  (s)=>svgIcon('<path d="M12 3.4l2.1 4.6 5 .6-3.7 3.5 1 5-4.4-2.4-4.4 2.4 1-5-3.7-3.5 5-.6L12 3.4z" fill="currentColor"/>', s),
+  copy:       (s)=>svgIcon('<rect x="8.5" y="8.5" width="10.5" height="10.5" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 15V6.5a1.5 1.5 0 0 1 1.5-1.5H15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', s),
+  archive:    (s)=>svgIcon('<rect x="4" y="5.5" width="16" height="3.6" rx="1" stroke="currentColor" stroke-width="1.6"/><path d="M5.2 9.5v7.3a2 2 0 0 0 2 2h9.6a2 2 0 0 0 2-2V9.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.2 13.4h3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', s),
+  search:     (s)=>svgIcon('<circle cx="10.3" cy="10.3" r="6" stroke="currentColor" stroke-width="1.7"/><path d="M15 15l4.6 4.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>', s),
+  back:       (s)=>svgIcon('<path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>', s),
+  chevron:    (s)=>svgIcon('<path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>', s||14),
+  handle:     (s)=>svgIcon('<rect x="3" y="10" width="18" height="3.6" rx="1.8" fill="currentColor"/>', s||22),
+  emptyDrawer:(s)=>svgIcon('<path d="M4 8.5h16M5.5 8.5V18a1.5 1.5 0 0 0 1.5 1.5h10A1.5 1.5 0 0 0 18.5 18V8.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 8.5L9 4.5h6l2.5 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10.3 12h3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>', s||30),
+};
+
+/* ---------- Clipboard ---------- */
+function copyText(text, btnEl){
+  const done = ()=>{
+    showToast('Copied \u2713');
+    if(btnEl){ btnEl.classList.add('sweep','go'); setTimeout(()=>btnEl.classList.remove('sweep','go'), 500); }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>showToast('Could not copy \u2014 select and copy manually'));
+  } else {
+    showToast('Copy not supported on this browser');
+  }
+}
+let toastTimer=null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1600);
+}
+
+/* ---------- Derived data ---------- */
+function itemsFor(drawerId){ return state[drawerId] || []; }
+function allTags(drawerId){
+  const set = new Set();
+  itemsFor(drawerId).forEach(i=> (i.tags||[]).forEach(t=>set.add(t)));
+  return Array.from(set).sort();
+}
+function matchesSearch(item, q){
+  if(!q) return true;
+  const hay = [item.title, item.text, ...(item.points||[]).map(p=>p.label+' '+p.text), ...(item.tags||[])]
+    .filter(Boolean).join(' ').toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+function visibleItems(drawerId){
+  let list = itemsFor(drawerId);
+  if(ui.filter==='archived'){ list = list.filter(i=>i.archived); }
+  else{
+    list = list.filter(i=>!i.archived);
+    if(ui.filter==='pinned') list = list.filter(i=>i.pinned);
+    else if(ui.filter!=='all') list = list.filter(i=>(i.tags||[]).includes(ui.filter));
+  }
+  list = list.filter(i=>matchesSearch(i, ui.search));
+  return list.slice().sort((a,b)=>{
+    if(!!b.pinned - !!a.pinned !== 0) return (b.pinned?1:0)-(a.pinned?1:0);
+    return b.createdAt - a.createdAt;
+  });
+}
+
+/* ---------- Render ---------- */
+function render(){
+  if(ui.view==='picker'){ renderPicker(); return; }
+  renderDrawerView();
+}
+
+/* ---------- Picker screen — "what are we looking for today?" ---------- */
+function mostUsedDrawer(){
+  let best=null, bestCount=0;
+  DRAWERS.forEach(d=>{
+    const c = (state.usage[d.id]||{}).count||0;
+    if(c>bestCount){ bestCount=c; best=d.id; }
+  });
+  return best;
+}
+function drawerSmartNote(d){
+  const u = state.usage[d.id] || {count:0,last:0};
+  if(u.count===0) return 'Not opened yet';
+  const days = Math.floor((Date.now()-u.last)/86400000);
+  if(days<=0) return 'Opened today';
+  if(days===1) return 'Opened yesterday';
+  return `${days} days since last open`;
+}
+function openDrawer(id){
+  const u = state.usage[id] || (state.usage[id]={count:0,last:0});
+  u.count += 1;
+  u.last = Date.now();
+  saveState();
+  ui.view='drawer'; ui.activeDrawer=id; ui.filter='all'; ui.search=''; ui.expandedId=null;
+  render();
+}
+function backToPicker(){ ui.view='picker'; render(); }
+
+function drawerFrontHTML(d){
+  const items = itemsFor(d.id).filter(i=>!i.archived);
+  const isMostUsed = mostUsedDrawer()===d.id && items.length>0 && (state.usage[d.id]||{}).count>0;
+  return `
+    <button class="drawer-front" data-color="${d.color}" onclick="openDrawer('${d.id}')">
+      <span class="df-handle">${ICONS.handle()}</span>
+      <span class="df-main">
+        <span class="df-label">${d.label}${isMostUsed?'<span class="df-badge">Most used</span>':''}</span>
+        <span class="df-sub">${items.length} saved \u00b7 ${drawerSmartNote(d)}</span>
+      </span>
+      <span class="df-chev">${ICONS.chevron()}</span>
+    </button>`;
+}
+
+function renderPicker(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="label-plate">
+      <span class="plate-text">Copy Drawer</span>
+    </div>
+    <div class="picker-wrap">
+      <p class="picker-prompt">What are we looking for today?</p>
+      <div class="cabinet">
+        ${DRAWERS.map(d=>drawerFrontHTML(d)).join('')}
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+  `;
+}
+
+/* ---------- Drawer view — the list you land in after picking ---------- */
+function renderDrawerView(){
+  const app = document.getElementById('app');
+  const meta = drawerMeta(ui.activeDrawer);
+  const items = visibleItems(ui.activeDrawer);
+  const total = itemsFor(ui.activeDrawer).filter(i=>!i.archived).length;
+
+  app.innerHTML = `
+    <div class="hdr">
+      <button class="back-btn" onclick="backToPicker()">${ICONS.back()}<span>All drawers</span></button>
+      <div class="count-tag">${total} ${total===1?meta.noun:meta.noun+'s'}</div>
+    </div>
+    <div class="drawer-title" data-color="${meta.color}">${meta.label}</div>
+
+    <div class="search-wrap">
+      <input class="search-input" placeholder="Search ${meta.label.toLowerCase()}\u2026" value="${escapeHTML(ui.search)}" oninput="setSearch(this.value)" />
+      ${filterRowHTML()}
+    </div>
+
+    <div class="list">
+      ${items.length ? items.map(i=>cardHTML(i)).join('') : emptyStateHTML()}
+    </div>
+
+    <button class="fab" data-color="${meta.color}" onclick="openAddSheet('${ui.activeDrawer}')">+</button>
+    ${ui.sheet ? sheetHTML() : ''}
+    <div class="toast" id="toast"></div>
+  `;
+}
+
+function filterRowHTML(){
+  const tags = allTags(ui.activeDrawer);
+  const archivedCount = itemsFor(ui.activeDrawer).filter(i=>i.archived).length;
+  const chips = [
+    `<button class="filter-chip ${ui.filter==='all'?'active':''}" onclick="setFilter('all')">All</button>`,
+    `<button class="filter-chip ${ui.filter==='pinned'?'active':''}" onclick="setFilter('pinned')">${ICONS.pinFilled(13)} Pinned</button>`,
+    ...tags.map(t=>`<button class="filter-chip ${ui.filter===t?'active':''}" onclick="setFilter('${jsq(t)}')">${escapeHTML(t)}</button>`),
+    archivedCount ? `<button class="filter-chip ${ui.filter==='archived'?'active':''}" onclick="setFilter('archived')">Archived (${archivedCount})</button>` : ''
+  ].join('');
+  return `<div class="filter-row">${chips}</div>`;
+}
+
+function emptyStateHTML(){
+  const meta = drawerMeta(ui.activeDrawer);
+  if(ui.search || ui.filter!=='all'){
+    return `<div class="empty-state"><span class="ico">${ICONS.search(30)}</span><b>Nothing matches</b>Try a different search or filter.</div>`;
+  }
+  const hints = {
+    hooks:'A scroll-stopping first line for your posts.',
+    ctas:'A call to action \u2014 what you want people to do next.',
+    topics:'A subject with its talking points, ready to build a post from.'
+  };
+  return `<div class="empty-state"><span class="ico">${ICONS.emptyDrawer(30)}</span><b>No ${meta.label.toLowerCase()} yet</b>${hints[ui.activeDrawer]}<br>Tap + to add your first one.</div>`;
+}
+
+function tagsRowHTML(item, color){
+  if(!item.tags || !item.tags.length) return '';
+  return `<div class="item-tags-row">${item.tags.map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join('')}</div>`;
+}
+
+function cardHTML(item){
+  const meta = drawerMeta(ui.activeDrawer);
+  const isOpen = ui.expandedId===item.id;
+  const previewLabel = ui.activeDrawer==='topics' ? escapeHTML(item.title||'(untitled topic)') : escapeHTML(firstLine(item.text||''));
+  const previewSub = ui.activeDrawer==='topics' ? `${(item.points||[]).length} talking point${(item.points||[]).length===1?'':'s'}` : '';
+
+  return `
+    <div class="item-card" data-color="${meta.color}">
+      <button class="item-head ${isOpen?'open':''} ${item.pinned?'pinned':''}" onclick="toggleExpand('${item.id}')">
+        <span class="pin-ico">${item.pinned?ICONS.pinFilled(13):'\u2022'}</span>
+        <span class="preview">${ui.activeDrawer==='topics' ? `<b>${previewLabel}</b>${previewSub}` : previewLabel}</span>
+        <span class="chev">${ICONS.chevron(14)}</span>
+      </button>
+      ${tagsRowHTML(item)}
+      ${isOpen ? itemBodyHTML(item) : ''}
+    </div>`;
+}
+
+function firstLine(text){
+  const t=(text||'').trim();
+  const nl=t.indexOf('\n');
+  return nl===-1? t : t.slice(0,nl)+'\u2026';
+}
+
+function itemBodyHTML(item){
+  if(ui.activeDrawer==='topics'){
+    const pointsHTML = (item.points||[]).map(p=>`
+      <div class="point">
+        <span class="point-label">${escapeHTML(p.label)}</span>
+        <div class="point-row">
+          <div class="point-text">${escapeHTML(p.text)}</div>
+          <button class="point-copy" onclick="copyPoint('${item.id}','${p.id}', this)">${ICONS.copy(15)}</button>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="item-body">
+        ${pointsHTML || '<p style="color:var(--ink-faint); font-size:13px;">No talking points added yet.</p>'}
+        <button class="copy-btn" onclick="copyAllTopic('${item.id}', this)">Copy whole topic</button>
+        <div class="action-row">
+          <button class="icon-btn" onclick="togglePin('${item.id}')" title="Pin">${item.pinned?ICONS.pinFilled(16):ICONS.pinOutline(16)}</button>
+          <button class="copy-btn ghost" onclick="openEditSheet('${item.id}')">Edit</button>
+          <button class="icon-btn" onclick="toggleArchive('${item.id}')" title="Archive">${ICONS.archive(16)}</button>
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="item-body">
+      <div class="item-full-text">${escapeHTML(item.text)}</div>
+      <button class="copy-btn" onclick="copyItemText('${item.id}', this)">Copy</button>
+      <div class="action-row">
+        <button class="icon-btn" onclick="togglePin('${item.id}')" title="Pin">${item.pinned?ICONS.pinFilled(16):ICONS.pinOutline(16)}</button>
+        <button class="copy-btn ghost" onclick="openEditSheet('${item.id}')">Edit</button>
+        <button class="icon-btn" onclick="toggleArchive('${item.id}')" title="Archive">${ICONS.archive(16)}</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- Nav / filter actions ---------- */
+function setFilter(f){ ui.filter=f; ui.expandedId=null; render(); }
+function setSearch(v){ ui.search=v; render(); keepSearchFocus(); }
+function keepSearchFocus(){
+  const el = document.querySelector('.search-input');
+  if(el){ el.focus(); el.selectionStart = el.selectionEnd = el.value.length; }
+}
+function toggleExpand(id){ ui.expandedId = ui.expandedId===id ? null : id; render(); }
+
+/* ---------- Item mutations ---------- */
+function findItem(id){
+  for(const d of DRAWERS){
+    const found = (state[d.id]||[]).find(i=>i.id===id);
+    if(found) return {item:found, drawer:d.id};
+  }
+  return null;
+}
+function togglePin(id){
+  const f = findItem(id); if(!f) return;
+  f.item.pinned = !f.item.pinned;
+  saveState(); render();
+}
+function toggleArchive(id){
+  const f = findItem(id); if(!f) return;
+  f.item.archived = !f.item.archived;
+  ui.expandedId = null;
+  saveState(); render();
+  showToast(f.item.archived ? 'Archived' : 'Restored');
+}
+function deleteItem(id){
+  const f = findItem(id); if(!f) return;
+  if(!confirm('Delete this for good? This can\u2019t be undone.')) return;
+  state[f.drawer] = state[f.drawer].filter(i=>i.id!==id);
+  ui.expandedId = null;
+  ui.sheet = null;
+  saveState(); render();
+  showToast('Deleted');
+}
+
+/* ---------- Copy actions ---------- */
+function copyItemText(id, btn){
+  const f = findItem(id); if(!f) return;
+  copyText(f.item.text, btn);
+}
+function copyPoint(topicId, pointId, btn){
+  const f = findItem(topicId); if(!f) return;
+  const p = (f.item.points||[]).find(p=>p.id===pointId);
+  if(!p) return;
+  copyText(p.text, btn);
+}
+function copyAllTopic(topicId, btn){
+  const f = findItem(topicId); if(!f) return;
+  const t = f.item;
+  const block = `${t.title}\n\n` + (t.points||[]).map(p=>`${p.label}: ${p.text}`).join('\n\n');
+  copyText(block, btn);
+}
+
+/* ---------- Add / edit sheet ---------- */
+function openAddSheet(drawerId){
+  ui.sheet = {
+    drawer: drawerId, id:null,
+    text:'', title:'',
+    tags:[],
+    points: drawerId==='topics' ? DEFAULT_POINT_LABELS.slice(0,3).map(l=>({id:uid('pt'), label:l, text:''})) : []
+  };
+  render();
+}
+function openEditSheet(id){
+  const f = findItem(id); if(!f) return;
+  ui.sheet = {
+    drawer: f.drawer, id: f.item.id,
+    text: f.item.text||'', title: f.item.title||'',
+    tags: (f.item.tags||[]).slice(),
+    points: (f.item.points||[]).map(p=>({id:p.id, label:p.label, text:p.text}))
+  };
+  ui.expandedId = null;
+  render();
+}
+function closeSheet(ev){
+  if(ev && ev.target !== ev.currentTarget) return;
+  ui.sheet = null;
+  render();
+}
+function updateSheetField(field, value){ if(ui.sheet) ui.sheet[field]=value; }
+function addPointRow(){
+  if(!ui.sheet) return;
+  ui.sheet.points.push({id:uid('pt'), label:'', text:''});
+  render();
+}
+function removePointRow(pid){
+  if(!ui.sheet) return;
+  ui.sheet.points = ui.sheet.points.filter(p=>p.id!==pid);
+  render();
+}
+function updatePointField(pid, field, value){
+  if(!ui.sheet) return;
+  const p = ui.sheet.points.find(p=>p.id===pid);
+  if(p) p[field]=value;
+}
+function addTagToSheet(){
+  const input = document.getElementById('newTagInput');
+  const val = (input.value||'').trim();
+  if(!val || !ui.sheet) return;
+  if(!ui.sheet.tags.includes(val)) ui.sheet.tags.push(val);
+  input.value='';
+  render();
+}
+function removeTagFromSheet(tag){
+  if(!ui.sheet) return;
+  ui.sheet.tags = ui.sheet.tags.filter(t=>t!==tag);
+  render();
+}
+function saveSheet(){
+  if(!ui.sheet) return;
+  const s = ui.sheet;
+  if(s.drawer==='topics'){
+    if(!s.title.trim()){ showToast('Give the topic a title first'); return; }
+  } else {
+    if(!s.text.trim()){ showToast('Add some text first'); return; }
+  }
+  const arr = state[s.drawer];
+  if(s.id){
+    const existing = arr.find(i=>i.id===s.id);
+    if(existing){
+      existing.text = s.text; existing.title = s.title; existing.tags = s.tags;
+      existing.points = s.points.filter(p=>p.label.trim()||p.text.trim());
+    }
+  } else {
+    arr.unshift({
+      id: uid(s.drawer.slice(0,-1)||'item'),
+      text: s.text, title: s.title, tags: s.tags,
+      points: s.points.filter(p=>p.label.trim()||p.text.trim()),
+      pinned:false, archived:false, createdAt: Date.now()
+    });
+  }
+  saveState();
+  ui.sheet = null;
+  render();
+  showToast('Saved \u2713');
+}
+
+function sheetHTML(){
+  const s = ui.sheet;
+  const meta = drawerMeta(s.drawer);
+  const isTopic = s.drawer==='topics';
+  const existingTags = Array.from(new Set([...(SUGGESTED_TAGS[s.drawer]||[]), ...allTags(s.drawer)]))
+    .filter(t=>!s.tags.includes(t));
+
+  const body = isTopic ? `
+      <span class="field-label">Topic title</span>
+      <input class="text-input" value="${escapeHTML(s.title)}" placeholder="e.g. FAQ \u2192 Quick replies"
+        oninput="updateSheetField('title', this.value)" />
+
+      <span class="field-label">Talking points</span>
+      ${s.points.map(p=>`
+        <div class="point-edit-row">
+          <div class="row-top">
+            <input class="label-input" value="${escapeHTML(p.label)}" placeholder="Label, e.g. Why it matters"
+              oninput="updatePointField('${p.id}','label',this.value)" />
+            <button class="remove-point" onclick="removePointRow('${p.id}')">\u2715</button>
+          </div>
+          <textarea class="text-area" style="min-height:56px;" placeholder="What goes here\u2026"
+            oninput="updatePointField('${p.id}','text',this.value)">${escapeHTML(p.text)}</textarea>
+        </div>`).join('')}
+      <button class="add-point-btn" onclick="addPointRow()">+ Add talking point</button>
+  ` : `
+      <span class="field-label">${meta.noun} text</span>
+      <textarea class="text-area" placeholder="Write your ${meta.noun.toLowerCase()}\u2026"
+        oninput="updateSheetField('text', this.value)">${escapeHTML(s.text)}</textarea>
+  `;
+
+  return `
+    <div class="sheet-backdrop" onclick="closeSheet(event)">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <h2>${s.id ? 'Edit' : 'New'} ${meta.noun}</h2>
+        ${body}
+        <span class="field-label">Tags</span>
+        <div class="tag-chip-row">
+          ${s.tags.map(t=>`<span class="tag-chip">${escapeHTML(t)} <button onclick="removeTagFromSheet('${jsq(t)}')">\u2715</button></span>`).join('')}
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input class="text-input" id="newTagInput" placeholder="Add a tag\u2026" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault(); addTagToSheet();}" />
+          <button class="btn-secondary" onclick="addTagToSheet()">Add</button>
+        </div>
+        ${existingTags.length ? `<div class="field-label" style="margin-top:10px;">Suggested</div><div class="tag-suggest-row">${existingTags.map(t=>`<button class="tag-suggest" onclick="(function(){ui.sheet.tags.push('${jsq(t)}');render();})()">+ ${escapeHTML(t)}</button>`).join('')}</div>` : ''}
+
+        <div class="sheet-actions">
+          <button class="btn-secondary" onclick="closeSheet()">Cancel</button>
+          <button class="btn-primary" onclick="saveSheet()">Save</button>
+        </div>
+        ${s.id ? `<button class="danger-link" onclick="deleteItem('${s.id}')">Delete this ${meta.noun.toLowerCase()}</button>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ---------- PWA ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+render();
+</script>
+</body>
+</html>

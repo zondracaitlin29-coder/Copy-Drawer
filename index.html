@@ -308,7 +308,55 @@ const SUGGESTED_TAGS = {
 };
 function freshUsage(){ return {hooks:{count:0,last:0}, ctas:{count:0,last:0}, topics:{count:0,last:0}}; }
 
-let state = loadState();
+const SEED_FLAG_KEY = 'copyDrawerSeeded_v1';
+const SEED_HOOKS = [
+  {text:"You just lost a customer... and you don't even know it yet.", tags:['bold claim']},
+  {text:"Your WhatsApp 'Seen' at 2am is costing you sales.", tags:['relatable']},
+  {text:"3 words customers type before they buy — do you know them?", tags:['curiosity']},
+  {text:"This is why your DMs go cold after 'Hi, is this available?'", tags:['relatable']},
+  {text:"The average small business takes 8 hours to reply. Here's what happens instead.", tags:['stat']},
+  {text:"Your Facebook inbox is basically a graveyard of missed money.", tags:['bold claim']},
+  {text:"I read 200 customer chats last week. Here's the one mistake everyone makes.", tags:['story']},
+  {text:"Stop typing 'Hi, thanks for reaching out!' — it's killing your sales.", tags:['controversial']},
+  {text:"Customers don't leave because of price. They leave because of silence.", tags:['bold claim']},
+  {text:"The difference between a browser and a buyer? Your first reply.", tags:['question']},
+];
+const SEED_CTAS = [
+  {text:"Drop 'AUDIT' below and I'll tell you what's wrong with your DMs.", tags:['comment below']},
+  {text:"Tag a business owner who takes forever to reply 👀", tags:['comment below']},
+  {text:"Save this before your next WhatsApp inquiry comes in.", tags:['soft ask']},
+  {text:"Comment 'TEMPLATE' and I'll send you my go-to reply.", tags:['comment below']},
+  {text:"Which reply would YOU send? Vote in the comments.", tags:['comment below']},
+  {text:"DM me 'READY' if you want your response templates sorted this week.", tags:['dm me']},
+  {text:"Share this with the friend who's still typing '...' for 6 hours.", tags:['soft ask']},
+  {text:"Book a free 15-min Inbox Audit — link in bio.", tags:['link in bio']},
+  {text:"Screenshot this and put it next to your phone.", tags:['soft ask']},
+  {text:"Reply with your worst customer-chat horror story 😅", tags:['comment below']},
+];
+const SEED_TOPICS = [
+  {title:"Response time benchmarks", tags:['tips'], points:[{label:'Why it matters', text:"What \u201Ctoo slow\u201D actually looks like to a customer."}]},
+  {title:"Before/after: a real chat rewrite", tags:['how-to'], points:[{label:'Example', text:"Anonymized customer chat, rewritten line by line."}]},
+  {title:"5 templates every WhatsApp Business needs", tags:['tips'], points:[{label:'How it helps', text:"The saved replies that cover 80% of inquiries."}]},
+  {title:"Why 'Hi, how can I help?' kills conversions", tags:['mistake fix'], points:[{label:'Common mistake', text:"Generic greetings signal a script, not a person."}]},
+  {title:"Reading customer intent", tags:['teach'], points:[{label:'Why it matters', text:"Spotting questions vs. ready-to-buy signals."}]},
+  {title:"Handling price objections without discounting", tags:['how-to'], points:[{label:'Quick fix', text:"Reframe value before the price comes up."}]},
+  {title:"The first 60 seconds after a DM lands", tags:['faq'], points:[{label:'Why it matters', text:"What happens (or should happen) immediately."}]},
+  {title:"Facebook Messenger vs WhatsApp tone", tags:['teach'], points:[{label:'Who needs it', text:"Same business, two different customer expectations."}]},
+  {title:"Turning 'just browsing' into a booking", tags:['how-to'], points:[{label:'How it helps', text:"The follow-up sequence that keeps the door open."}]},
+  {title:"The auto-reply mistake that feels robotic", tags:['mistake fix'], points:[{label:'Quick fix', text:"Small wording changes that keep it human."}]},
+];
+function seedIfNeeded(loaded){
+  if(localStorage.getItem(SEED_FLAG_KEY)) return loaded;
+  const mk = (base, extra) => Object.assign({id:uid('item'), tags:[], points:[], pinned:false, archived:false, createdAt: Date.now()}, base, extra||{});
+  loaded.hooks = [...SEED_HOOKS.map(h=>mk({text:h.text, tags:h.tags})), ...loaded.hooks];
+  loaded.ctas = [...SEED_CTAS.map(c=>mk({text:c.text, tags:c.tags})), ...loaded.ctas];
+  loaded.topics = [...SEED_TOPICS.map(t=>mk({title:t.title, tags:t.tags, points:t.points.map(p=>({id:uid('pt'), label:p.label, text:p.text}))})), ...loaded.topics];
+  localStorage.setItem(SEED_FLAG_KEY, '1');
+  return loaded;
+}
+
+let state = seedIfNeeded(loadState());
+saveState();
 let ui = {
   view: 'picker',       // 'picker' (the "what are we looking for" screen) | 'drawer'
   activeDrawer: 'hooks',

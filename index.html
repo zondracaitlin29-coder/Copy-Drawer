@@ -36,6 +36,14 @@
   --topic-strong:#2F5D62;
   --topic-wash:#DCE7E6;
 
+  --poll:#6B4E9A;
+  --poll-strong:#7E5CB3;
+  --poll-wash:#E6DEF3;
+
+  --script:#8C5A2B;
+  --script-strong:#A66B34;
+  --script-wash:#F1E1CC;
+
   --highlighter:#F4C744;
   --highlighter-ink:#3A2E06;
 
@@ -95,6 +103,8 @@ button{font:inherit; cursor:pointer;}
 .drawer-front[data-color="hook"]{--accent:var(--hook-strong); --wash:var(--hook-wash);}
 .drawer-front[data-color="cta"]{--accent:var(--cta-strong); --wash:var(--cta-wash);}
 .drawer-front[data-color="topic"]{--accent:var(--topic-strong); --wash:var(--topic-wash);}
+.drawer-front[data-color="poll"]{--accent:var(--poll-strong); --wash:var(--poll-wash);}
+.drawer-front[data-color="script"]{--accent:var(--script-strong); --wash:var(--script-wash);}
 .drawer-front:active{transform:scale(.985);}
 .df-handle{flex-shrink:0; color:var(--accent); opacity:.5;}
 .df-main{flex:1; display:flex; flex-direction:column; gap:4px; min-width:0;}
@@ -125,6 +135,8 @@ button{font:inherit; cursor:pointer;}
 .drawer-title[data-color="hook"]{--accent:var(--hook-strong); color:var(--hook-strong);}
 .drawer-title[data-color="cta"]{--accent:var(--cta-strong); color:var(--cta-strong);}
 .drawer-title[data-color="topic"]{--accent:var(--topic-strong); color:var(--topic-strong);}
+.drawer-title[data-color="poll"]{--accent:var(--poll-strong); color:var(--poll-strong);}
+.drawer-title[data-color="script"]{--accent:var(--script-strong); color:var(--script-strong);}
 
 /* ---------- Search + filters ---------- */
 .search-wrap{
@@ -161,6 +173,8 @@ button{font:inherit; cursor:pointer;}
 .item-card[data-color="hook"]{--accent:var(--hook-strong);}
 .item-card[data-color="cta"]{--accent:var(--cta-strong);}
 .item-card[data-color="topic"]{--accent:var(--topic-strong);}
+.item-card[data-color="poll"]{--accent:var(--poll-strong);}
+.item-card[data-color="script"]{--accent:var(--script-strong);}
 .item-head{
   display:flex; align-items:flex-start; gap:10px; padding:13px 14px; text-align:left; width:100%; background:none; border:none;
 }
@@ -175,6 +189,8 @@ button{font:inherit; cursor:pointer;}
 .item-card[data-color="hook"] .tag{background:var(--hook-wash);}
 .item-card[data-color="cta"] .tag{background:var(--cta-wash);}
 .item-card[data-color="topic"] .tag{background:var(--topic-wash);}
+.item-card[data-color="poll"] .tag{background:var(--poll-wash);}
+.item-card[data-color="script"] .tag{background:var(--script-wash);}
 
 .item-body{padding:0 14px 14px 14px; border-top:1px dashed var(--line);}
 .item-full-text{
@@ -218,6 +234,8 @@ button{font:inherit; cursor:pointer;}
 .fab[data-color="hook"]{background:var(--hook);}
 .fab[data-color="cta"]{background:var(--cta);}
 .fab[data-color="topic"]{background:var(--topic);}
+.fab[data-color="poll"]{background:var(--poll);}
+.fab[data-color="script"]{background:var(--script);}
 
 /* ---------- Sheet (add/edit modal) ---------- */
 .sheet-backdrop{
@@ -296,19 +314,33 @@ button{font:inherit; cursor:pointer;}
 ========================================================= */
 const STORE_KEY = 'copyDrawerState_v1';
 const DRAWERS = [
-  {id:'hooks',  label:'Hooks',  color:'hook',  noun:'hook'},
-  {id:'ctas',   label:'CTAs',   color:'cta',   noun:'CTA'},
-  {id:'topics', label:'Topics', color:'topic', noun:'topic'},
+  {id:'hooks',   label:'Hooks',        color:'hook',   noun:'hook'},
+  {id:'ctas',    label:'CTAs',         color:'cta',    noun:'CTA'},
+  {id:'topics',  label:'Topics',       color:'topic',  noun:'topic'},
+  {id:'polls',   label:'Quick Polls',  color:'poll',   noun:'poll'},
+  {id:'scripts', label:'Story Scripts',color:'script', noun:'script'},
 ];
+const POINT_DRAWERS = ['topics','scripts'];
+function usesPoints(drawerId){ return POINT_DRAWERS.includes(drawerId); }
 const DEFAULT_POINT_LABELS = ['Why it matters','Who needs it','How it helps','Common mistake','Quick fix','Example'];
-const SUGGESTED_TAGS = {
-  hooks:  ['curiosity','bold claim','question','story','stat','relatable','controversial'],
-  ctas:   ['soft ask','hard sell','urgent','free offer','comment below','dm me','link in bio'],
-  topics: ['teach','promote','trust','tips','faq','how-to','mistake fix'],
+const POINT_LABEL_SETS = {
+  topics:  DEFAULT_POINT_LABELS,
+  scripts: ['Hook (slide 1)','Build-up','Payoff / reveal','CTA (last slide)'],
 };
-function freshUsage(){ return {hooks:{count:0,last:0}, ctas:{count:0,last:0}, topics:{count:0,last:0}}; }
+const TITLE_FIELD_META = {
+  topics:  {label:'Topic title',  placeholder:"e.g. FAQ \u2192 Quick replies", pointsLabel:'Talking points', pointNoun:'talking point'},
+  scripts: {label:'Script title', placeholder:"e.g. A day in the DMs",        pointsLabel:'Script beats',    pointNoun:'beat'},
+};
+const SUGGESTED_TAGS = {
+  hooks:   ['curiosity','bold claim','question','story','stat','relatable','controversial'],
+  ctas:    ['soft ask','hard sell','urgent','free offer','comment below','dm me','link in bio'],
+  topics:  ['teach','promote','trust','tips','faq','how-to','mistake fix'],
+  polls:   ['this or that','engagement','opinion','yes or no','relatable'],
+  scripts: ['before/after','behind the scenes','day in the life','client story','tutorial'],
+};
+function freshUsage(){ return {hooks:{count:0,last:0}, ctas:{count:0,last:0}, topics:{count:0,last:0}, polls:{count:0,last:0}, scripts:{count:0,last:0}}; }
 
-const SEED_FLAG_KEY = 'copyDrawerSeeded_v1';
+const SEED_FLAG_KEY = 'copyDrawerSeeded_v2'; // bumped so polls/scripts seed even if v1 already ran on this device
 const SEED_HOOKS = [
   {text:"You just lost a customer... and you don't even know it yet.", tags:['bold claim']},
   {text:"Your WhatsApp 'Seen' at 2am is costing you sales.", tags:['relatable']},
@@ -345,12 +377,78 @@ const SEED_TOPICS = [
   {title:"Turning 'just browsing' into a booking", tags:['how-to'], points:[{label:'How it helps', text:"The follow-up sequence that keeps the door open."}]},
   {title:"The auto-reply mistake that feels robotic", tags:['mistake fix'], points:[{label:'Quick fix', text:"Small wording changes that keep it human."}]},
 ];
+const SEED_POLLS = [
+  {text:"How long do YOU wait before replying to a DM?\nA) Within minutes\nB) Whenever I remember \uD83D\uDE05", tags:['this or that']},
+  {text:"Where do most of your customers message you?\nA) WhatsApp\nB) Facebook", tags:['opinion']},
+  {text:"Auto-replies: yes or no?\nA) Love them\nB) Feel too robotic", tags:['yes or no']},
+  {text:"What stops you from replying faster?\nA) Too busy\nB) Don't know what to say", tags:['opinion']},
+  {text:"Would you rather\u2026\nA) Answer 50 easy DMs\nB) Answer 5 tricky ones", tags:['this or that']},
+  {text:"Biggest DM pet peeve?\nA) Being ignored\nB) Getting a copy-paste reply", tags:['relatable']},
+  {text:"Do you have saved reply templates?\nA) Yes, several\nB) I type everything fresh", tags:['yes or no']},
+  {text:"What matters more in a first reply?\nA) Speed\nB) Personal tone", tags:['this or that']},
+  {text:"Ever lost a sale to a slow reply?\nA) Yes, definitely\nB) Not that I know of", tags:['relatable']},
+  {text:"Which platform is harder to manage?\nA) WhatsApp\nB) Facebook Messenger", tags:['opinion']},
+];
+const SEED_SCRIPTS = [
+  {title:"A day in the DMs", tags:['day in the life'], points:[
+    {label:'Hook (slide 1)', text:"POV: it's 9am and your inbox already has 12 unread messages"},
+    {label:'Build-up', text:"Quick clips of replying, tagging, saving go-to templates"},
+    {label:'CTA (last slide)', text:"This is why I built a reply template system \u2014 link in bio"},
+  ]},
+  {title:"The reply that lost a sale", tags:['client story'], points:[
+    {label:'Hook (slide 1)', text:"This message took 14 hours to get a reply. Here's what happened next."},
+    {label:'Build-up', text:"Recreate the exchange (blurred/anonymized) beat by beat"},
+    {label:'CTA (last slide)', text:"Comment 'FAST' if you want my speed-up checklist"},
+  ]},
+  {title:"Before vs after templates", tags:['before/after'], points:[
+    {label:'Hook (slide 1)', text:"Same question. Two very different replies."},
+    {label:'Build-up', text:"Show the generic reply, then the templated version side by side"},
+    {label:'CTA (last slide)', text:"Save this for your next 'is this available?' message"},
+  ]},
+  {title:"3 DMs I get every single day", tags:['tutorial'], points:[
+    {label:'Hook (slide 1)', text:"These 3 messages land in my inbox daily \u2014 here's how I answer each"},
+    {label:'Build-up', text:"Walk through each message + the reply that converts"},
+    {label:'CTA (last slide)', text:"Which one do YOU get most? Comment below"},
+  ]},
+  {title:"What I say when someone says 'just looking'", tags:['tutorial'], points:[
+    {label:'Hook (slide 1)', text:"'Just looking' isn't a no \u2014 it's a maybe. Here's my go-to reply."},
+    {label:'Build-up', text:"Show the exact reply and why it keeps the door open"},
+    {label:'CTA (last slide)', text:"Try this word-for-word and tell me how it goes"},
+  ]},
+  {title:"The WhatsApp vs Facebook tone switch", tags:['before/after'], points:[
+    {label:'Hook (slide 1)', text:"Same business, two inboxes, two totally different tones"},
+    {label:'Build-up', text:"Compare a WhatsApp reply vs a Facebook Messenger reply"},
+    {label:'CTA (last slide)', text:"Which platform's tone comes easier to you?"},
+  ]},
+  {title:"Behind the scenes: building a reply library", tags:['behind the scenes'], points:[
+    {label:'Hook (slide 1)', text:"Building my saved-replies library so I never type the same thing twice"},
+    {label:'Build-up', text:"Screen recording of organizing templates by category"},
+    {label:'CTA (last slide)', text:"Want my starter template pack? Comment 'TEMPLATE'"},
+  ]},
+  {title:"A client's DMs, audited live", tags:['client story'], points:[
+    {label:'Hook (slide 1)', text:"I audited a client's inbox for 10 minutes. Here's what I found."},
+    {label:'Build-up', text:"Walk through 2-3 anonymized findings and quick fixes"},
+    {label:'CTA (last slide)', text:"Want your inbox audited? Link in bio"},
+  ]},
+  {title:"The 60-second rule", tags:['tutorial'], points:[
+    {label:'Hook (slide 1)', text:"What happens in the first 60 seconds after someone messages you?"},
+    {label:'Build-up', text:"Break down the ideal first-minute response flow"},
+    {label:'CTA (last slide)', text:"Save this and try it on your next inquiry"},
+  ]},
+  {title:"My worst customer-chat mistake (and the fix)", tags:['client story'], points:[
+    {label:'Hook (slide 1)', text:"I once left a customer on read for 2 days. Here's what it cost me."},
+    {label:'Build-up', text:"Tell the story, then show the system that fixed it"},
+    {label:'CTA (last slide)', text:"What's your worst DM mistake? Tell me below"},
+  ]},
+];
 function seedIfNeeded(loaded){
   if(localStorage.getItem(SEED_FLAG_KEY)) return loaded;
   const mk = (base, extra) => Object.assign({id:uid('item'), tags:[], points:[], pinned:false, archived:false, createdAt: Date.now()}, base, extra||{});
   loaded.hooks = [...SEED_HOOKS.map(h=>mk({text:h.text, tags:h.tags})), ...loaded.hooks];
   loaded.ctas = [...SEED_CTAS.map(c=>mk({text:c.text, tags:c.tags})), ...loaded.ctas];
   loaded.topics = [...SEED_TOPICS.map(t=>mk({title:t.title, tags:t.tags, points:t.points.map(p=>({id:uid('pt'), label:p.label, text:p.text}))})), ...loaded.topics];
+  loaded.polls = [...SEED_POLLS.map(p=>mk({text:p.text, tags:p.tags})), ...loaded.polls];
+  loaded.scripts = [...SEED_SCRIPTS.map(s=>mk({title:s.title, tags:s.tags, points:s.points.map(p=>({id:uid('pt'), label:p.label, text:p.text}))})), ...loaded.scripts];
   localStorage.setItem(SEED_FLAG_KEY, '1');
   return loaded;
 }
@@ -371,10 +469,10 @@ function loadState(){
     const raw = localStorage.getItem(STORE_KEY);
     if(raw){
       const parsed = JSON.parse(raw);
-      return Object.assign({hooks:[],ctas:[],topics:[],usage:freshUsage()}, parsed);
+      return Object.assign({hooks:[],ctas:[],topics:[],polls:[],scripts:[],usage:freshUsage()}, parsed);
     }
   }catch(e){}
-  return {hooks:[],ctas:[],topics:[],usage:freshUsage()};
+  return {hooks:[],ctas:[],topics:[],polls:[],scripts:[],usage:freshUsage()};
 }
 function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
 function uid(p){ return p+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8); }
@@ -561,7 +659,9 @@ function emptyStateHTML(){
   const hints = {
     hooks:'A scroll-stopping first line for your posts.',
     ctas:'A call to action \u2014 what you want people to do next.',
-    topics:'A subject with its talking points, ready to build a post from.'
+    topics:'A subject with its talking points, ready to build a post from.',
+    polls:'A ready-to-paste poll question with answer options.',
+    scripts:'A short beat-by-beat script for a story or reel.'
   };
   return `<div class="empty-state"><span class="ico">${ICONS.emptyDrawer(30)}</span><b>No ${meta.label.toLowerCase()} yet</b>${hints[ui.activeDrawer]}<br>Tap + to add your first one.</div>`;
 }
@@ -574,14 +674,16 @@ function tagsRowHTML(item, color){
 function cardHTML(item){
   const meta = drawerMeta(ui.activeDrawer);
   const isOpen = ui.expandedId===item.id;
-  const previewLabel = ui.activeDrawer==='topics' ? escapeHTML(item.title||'(untitled topic)') : escapeHTML(firstLine(item.text||''));
-  const previewSub = ui.activeDrawer==='topics' ? `${(item.points||[]).length} talking point${(item.points||[]).length===1?'':'s'}` : '';
+  const withPoints = usesPoints(ui.activeDrawer);
+  const pointNoun = (TITLE_FIELD_META[ui.activeDrawer]||{}).pointNoun || 'point';
+  const previewLabel = withPoints ? escapeHTML(item.title||`(untitled ${meta.noun})`) : escapeHTML(firstLine(item.text||''));
+  const previewSub = withPoints ? `${(item.points||[]).length} ${pointNoun}${(item.points||[]).length===1?'':'s'}` : '';
 
   return `
     <div class="item-card" data-color="${meta.color}">
       <button class="item-head ${isOpen?'open':''} ${item.pinned?'pinned':''}" onclick="toggleExpand('${item.id}')">
         <span class="pin-ico">${item.pinned?ICONS.pinFilled(13):'\u2022'}</span>
-        <span class="preview">${ui.activeDrawer==='topics' ? `<b>${previewLabel}</b>${previewSub}` : previewLabel}</span>
+        <span class="preview">${withPoints ? `<b>${previewLabel}</b>${previewSub}` : previewLabel}</span>
         <span class="chev">${ICONS.chevron(14)}</span>
       </button>
       ${tagsRowHTML(item)}
@@ -596,7 +698,9 @@ function firstLine(text){
 }
 
 function itemBodyHTML(item){
-  if(ui.activeDrawer==='topics'){
+  if(usesPoints(ui.activeDrawer)){
+    const pointNoun = (TITLE_FIELD_META[ui.activeDrawer]||{}).pointNoun || 'point';
+    const meta = drawerMeta(ui.activeDrawer);
     const pointsHTML = (item.points||[]).map(p=>`
       <div class="point">
         <span class="point-label">${escapeHTML(p.label)}</span>
@@ -607,8 +711,8 @@ function itemBodyHTML(item){
       </div>`).join('');
     return `
       <div class="item-body">
-        ${pointsHTML || '<p style="color:var(--ink-faint); font-size:13px;">No talking points added yet.</p>'}
-        <button class="copy-btn" onclick="copyAllTopic('${item.id}', this)">Copy whole topic</button>
+        ${pointsHTML || `<p style="color:var(--ink-faint); font-size:13px;">No ${pointNoun}s added yet.</p>`}
+        <button class="copy-btn" onclick="copyAllTopic('${item.id}', this)">Copy whole ${meta.noun}</button>
         <div class="action-row">
           <button class="icon-btn" onclick="togglePin('${item.id}')" title="Pin">${item.pinned?ICONS.pinFilled(16):ICONS.pinOutline(16)}</button>
           <button class="copy-btn ghost" onclick="openEditSheet('${item.id}')">Edit</button>
@@ -691,7 +795,7 @@ function openAddSheet(drawerId){
     drawer: drawerId, id:null,
     text:'', title:'',
     tags:[],
-    points: drawerId==='topics' ? DEFAULT_POINT_LABELS.slice(0,3).map(l=>({id:uid('pt'), label:l, text:''})) : []
+    points: usesPoints(drawerId) ? (POINT_LABEL_SETS[drawerId]||DEFAULT_POINT_LABELS).slice(0,3).map(l=>({id:uid('pt'), label:l, text:''})) : []
   };
   render();
 }
@@ -743,8 +847,8 @@ function removeTagFromSheet(tag){
 function saveSheet(){
   if(!ui.sheet) return;
   const s = ui.sheet;
-  if(s.drawer==='topics'){
-    if(!s.title.trim()){ showToast('Give the topic a title first'); return; }
+  if(usesPoints(s.drawer)){
+    if(!s.title.trim()){ showToast(`Give the ${drawerMeta(s.drawer).noun} a title first`); return; }
   } else {
     if(!s.text.trim()){ showToast('Add some text first'); return; }
   }
@@ -772,16 +876,17 @@ function saveSheet(){
 function sheetHTML(){
   const s = ui.sheet;
   const meta = drawerMeta(s.drawer);
-  const isTopic = s.drawer==='topics';
+  const isTopic = usesPoints(s.drawer);
+  const titleMeta = TITLE_FIELD_META[s.drawer] || {label:'Title', placeholder:'', pointsLabel:'Points'};
   const existingTags = Array.from(new Set([...(SUGGESTED_TAGS[s.drawer]||[]), ...allTags(s.drawer)]))
     .filter(t=>!s.tags.includes(t));
 
   const body = isTopic ? `
-      <span class="field-label">Topic title</span>
-      <input class="text-input" value="${escapeHTML(s.title)}" placeholder="e.g. FAQ \u2192 Quick replies"
+      <span class="field-label">${titleMeta.label}</span>
+      <input class="text-input" value="${escapeHTML(s.title)}" placeholder="${escapeHTML(titleMeta.placeholder)}"
         oninput="updateSheetField('title', this.value)" />
 
-      <span class="field-label">Talking points</span>
+      <span class="field-label">${titleMeta.pointsLabel}</span>
       ${s.points.map(p=>`
         <div class="point-edit-row">
           <div class="row-top">
@@ -792,7 +897,7 @@ function sheetHTML(){
           <textarea class="text-area" style="min-height:56px;" placeholder="What goes here\u2026"
             oninput="updatePointField('${p.id}','text',this.value)">${escapeHTML(p.text)}</textarea>
         </div>`).join('')}
-      <button class="add-point-btn" onclick="addPointRow()">+ Add talking point</button>
+      <button class="add-point-btn" onclick="addPointRow()">+ Add ${titleMeta.pointNoun||'point'}</button>
   ` : `
       <span class="field-label">${meta.noun} text</span>
       <textarea class="text-area" placeholder="Write your ${meta.noun.toLowerCase()}\u2026"
